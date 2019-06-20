@@ -1,0 +1,15 @@
+home-assistant:
+  https: false
+  host: localhost
+  port: 8123
+  access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI2ZDIwNzQ5Y2RjMmI0Y2QxYTJkNmFiNzg1NDY2YzhiNSIsImV4cCI6MTg3NTE4OTA1MSwiaWF0IjoxNTU5ODI5MDUxfQ.fFyAc21KOLw3SdnHQGuOQHnMvYFFROpkHu1clM_NIzA
+switch-for-gesture:
+  fist: 'input_boolean.my_ip_a1'
+  five: 'input_boolean.my_ip_a2'
+  point: 'input_boolean.my_ip_a3'
+  swing: 'input_boolean.my_ip_a4'
+thresholds:
+  fist: 0.95
+  five: 0.993
+  point: 0.96
+  swing: 0.93
