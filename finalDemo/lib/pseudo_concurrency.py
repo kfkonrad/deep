@@ -32,7 +32,8 @@ class Timer:
         current_time = time.time()
         self.repetition_countdown -= 1
         ret = None
-        if current_time - self.last_execution_time > self.waiting_time and self.repetition_countdown == 0:
+        if current_time - self.last_execution_time > self.waiting_time and \
+            self.repetition_countdown == 0:
             try:
                 if self.label:
                     print("Exectuing Timer '%s'..." % (self.label))

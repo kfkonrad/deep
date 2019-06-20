@@ -1,6 +1,6 @@
-import requests
 import json
 import time
+import requests
 
 class Hass:
     def __init__(self, api_base_endpoint, token):
@@ -12,15 +12,15 @@ class Hass:
 
     def post(self, endpoint, data):
         url = self.API_BASE_ENDPOINT + endpoint
-        return requests.post(url, headers = self.HEADERS, data = json.dumps(data))
+        return requests.post(url, headers=self.HEADERS, data=json.dumps(data))
 
     def get(self, endpoint):
         url = self.API_BASE_ENDPOINT + endpoint
-        return requests.get(url, headers = self.HEADERS)
+        return requests.get(url, headers=self.HEADERS)
 
     def switch_state(self, switch_name):
         ret = self.get('states/' + str(switch_name))
-        try: 
+        try:
             ret = json.loads(ret.text)
         except:
             print(ret)
@@ -38,12 +38,11 @@ class Hass:
         state = self.switch_state(switch_name)
         if state == 'on':
             return self.switch_off(switch_name)
-        else:
-            return self.switch_on(switch_name)
+        return self.switch_on(switch_name)
 
 if __name__ == '__main__':
-    mytoken = open('auth.token', 'r').read()[:-1]
-    h = Hass('http://localhost:8123/api/', mytoken)
-    h.switch_toggle('input_boolean.my_ip_a1')
+    MYTOKEN = open('auth.token', 'r').read()[:-1]
+    HASS = Hass('http://localhost:8123/api/', MYTOKEN)
+    HASS.switch_toggle('input_boolean.my_ip_a1')
     time.sleep(5)
-    h.switch_toggle('input_boolean.my_ip_a1')
+    HASS.switch_toggle('input_boolean.my_ip_a1')
