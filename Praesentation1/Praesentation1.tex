@@ -1,0 +1,81 @@
+%LuaLaTeX
+\documentclass[aspectratio=169]{beamer}
+\usepackage[libertine,nocaption]{/Users/Shared/texdir/stdpreamble}
+\usepackage{csquotes}
+\usepackage{nicefrac}
+\usepackage{multimedia}
+
+\myauthor{
+  Noll\and Schug\and Konrad
+}
+\myfooterauthor{Noll{\quad}Schug{\quad}Konrad}
+\mytitle{Gestenerkennung mit Tensorflow (Home Assistant IO)}
+\institute{HS KL Campus Zweibrücken}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\tableofcontents[subsectionstyle=hide]
+\end{frame}
+
+\section{Das Projekt}
+
+\begin{frame}
+Das Ziel des Projektes ist es ein Neuronales Netzwerk zu erstellen, dass mithilfe
+von OpenCV die einzelnen Bilder der Kamera ausgibt und entsprechende
+Gesten interpretiert. Die Gesten führen wiederum zu Aktionen von Smart Home
+Geräten, die mit dem Smart Home System \enquote{Home Assistant} verbunden sind. 
+\end{frame}
+
+\section{Das Team und die Aufgaben}
+
+\begin{frame}
+  \begin{itemize}
+    \item Erstellen einer Dokumentation während der einzelnen Projektphasen.
+    \item Installation des Home Assistant IO auf dem Raspberry Pi
+    \item Hinzufügen einer neuen Schnittstelle zur Integration eines Neuronalen
+	  Netzwerkes. (Das Neuronale Netzwerk wird durch neue Gesten ergänzt und
+	  anschließend auf diese trainiert.)
+  \end{itemize}
+  \begin{itemize}
+    \item Programmierer für die Schnittstelle zu Home Assistant IO, Operationsmanager
+    \item Programmierer für das Anpassen des Neuronalen Netzwerkes 
+  \end{itemize}
+\end{frame}
+
+\section{Kurzdemo OpenCV}
+\begin{frame}
+  \vskip 0.2cm
+  \movie[width=0.8\textwidth,height=0.45\textwidth,poster]{}{OpenCV.mov}
+  \vfilll
+\end{frame}
+
+\section{Grobe Projektphasen}
+
+\begin{frame}
+  \begin{itemize}
+    \item Theoretische Einarbeitungsphase (Dauer: ca. 2 Wochen)
+    \item Zusammenfassung der Theorie + erste grobe Anpassung des Models. (Dauer: ca. 1\nicefrac{1}{2} Wochen)
+    \item Hinzufügen neuer Gesten (mithilfe von angewandten Filtern) und trainieren des vorhandenen Modells, mit ersten Konditionen zur Integration von unterstützten Smart Home Geräten (Dauer: ca. 4 Wochen)
+    \item Ausarbeitung der Dokumentation, Präsentation und Poster (Dauer: ca. 1\nicefrac{1}{2} Wochen)
+  \end{itemize}
+\end{frame}
+
+\section{Meilensteine}
+
+\begin{frame}
+\begin{description}
+  \item[16. Mai] Installation von Home Assistant IO, damit die aktive Entwicklungsphase sofort beginnen kann.
+  \item[29. Mai] Durch erste Gesten sollen schon ein bis zwei Smart Home Geräte ein- und ausgeschaltet werden.
+  \item[13. Juni] Ende des Projektes.
+\end{description}
+\end{frame}
+
+\section{Organisation}
+\picframew[Kanban Board]{Board}
+
+\end{document}
