@@ -1,57 +1,25 @@
-import sys # system functions (ie. exiting the program)
 import os # operating system functions (ie. path building on Windows vs. MacOs)
 import time # for time operations
-import uuid # for generating unique file names
-import math # math functions
-
-from IPython.display import display as ipydisplay, Image, clear_output, HTML # for interacting with the notebook better
 
 import numpy as np # matrix operations (ie. difference between two matricies)
 import cv2 # (OpenCV) computer vision functions (ie. tracking)
 (major_ver, minor_ver, subminor_ver) = (cv2.__version__).split('.')
 print('OpenCV Version: {}.{}.{}'.format(major_ver, minor_ver, subminor_ver))
 
-import matplotlib.pyplot as plt # (optional) for plotting and showing images inline
-
-import keras # high level api to tensorflow (or theano, CNTK, etc.) and useful image preprocessing
-from keras import backend as K
-from keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array
-from keras.models import Sequential, load_model, model_from_json
-from keras.layers import Dense, Dropout, Activation, Flatten
-from keras.layers import Conv2D, MaxPooling2D
-print('Keras image data format: {}'.format(K.image_data_format()))
+from keras.models import load_model
 
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+from hass import Hass
+
+hass_token = open('auth.token', 'r').read()[:-1]
+hass = Hass('http://localhost:8123/api/', hass_token)
 
 MODEL_PATH = os.path.join('model')
 MODEL_FILE = os.path.join(MODEL_PATH, 'hand_model_gray.hdf5') # path to model weights and architechture file
 MODEL_HISTORY = os.path.join(MODEL_PATH, 'model_history.txt') # path to model training histor
 
-
 hand_model = load_model(MODEL_FILE, compile=False)
-# Set up tracker.
-def setup_tracker(ttype):
-    tracker_types = ['BOOSTING', 'MIL', 'KCF', 'TLD', 'MEDIANFLOW', 'GOTURN']
-    tracker_type = tracker_types[ttype]
-
-    if int(minor_ver) < 3:
-        tracker = cv2.Tracker_create(tracker_type)
-    else:
-        if tracker_type == 'BOOSTING':
-            tracker = cv2.TrackerBoosting_create()
-        if tracker_type == 'MIL':
-            tracker = cv2.TrackerMIL_create()
-        if tracker_type == 'KCF':
-            tracker = cv2.TrackerKCF_create()
-        if tracker_type == 'TLD':
-            tracker = cv2.TrackerTLD_create()
-        if tracker_type == 'MEDIANFLOW':
-            tracker = cv2.TrackerMedianFlow_create()
-        if tracker_type == 'GOTURN':
-            tracker = cv2.TrackerGOTURN_create()
-    
-    return tracker
 
 # Helper function for applying a mask to an array
 def mask_array(array, imask):
@@ -98,8 +66,9 @@ positions = {
     'fps': (15, 20), # fps counter
     'null_pos': (200, 200) # used as null point for mouse control
 }
+gesture_timer = 0
 
-# Capture, process, display loop    
+# Capture, process, display loop
 for image in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     # Read a new frame
     frame = image.array
@@ -114,7 +83,7 @@ for image in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     data_display = np.zeros_like(frame, dtype=np.uint8) # Black screen to display data
 
     # Start timer
-    timer = cv2.getTickCount()
+    tick_timer = cv2.getTickCount()
 
     # Processing
     # First find the absolute difference between the two images
@@ -139,6 +108,12 @@ for image in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         prediction = hand_model.predict(hand_crop_resized)
         predi = prediction[0].argmax() # Get the index of the greatest confidence
         gesture = classes[predi]
+        confidence = float(prediction[0][predi])
+        current_time = time.time()
+        if confidence > 0.9 and  current_time - gesture_timer > 5:
+            if gesture == 'five':
+                hass.switch_toggle('input_boolean.my_ip_a1')
+                gesture_timer = current_time
         
         for i, pred in enumerate(prediction[0]):
             # Draw confidence bar for each gesture
@@ -158,14 +133,11 @@ for image in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     except Exception as ex:
         pass
 
-
      # Calculate Frames per second (FPS)
-    fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
+    fps = cv2.getTickFrequency() / (cv2.getTickCount() - tick_timer)
     # Display FPS on frame
     cv2.putText(crop_display, "FPS : " + str(int(fps)), positions['fps'], cv2.FONT_HERSHEY_SIMPLEX, 0.65, (50, 170, 50), 2)
     
-
-
     # Display result
     cv2.imshow("crop_display", crop_display)
     # Display result

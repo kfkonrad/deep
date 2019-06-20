@@ -229,11 +229,11 @@ for image in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # Display result
     cv2.imshow("data", data_display)
     # Display diff
-    #cv2.imshow("diff", diff)
+    cv2.imshow("diff", diff)
     # Display thresh
-    #cv2.imshow("thresh", thresh)
+    cv2.imshow("thresh", thresh)
     # Display mask
-    #cv2.imshow("img_dilation", img_dilation)
+    cv2.imshow("img_dilation", img_dilation)
     try:
         # Display hand_crop
         #cv2.imshow("hand_crop", hand_crop)
